@@ -15,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C690521126B30EE300FFB97D /* SwiftNHK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftNHK.entitlements; sourceTree = "<group>"; };
 		C6CF63F526A95E9300418C7B /* SwiftNHK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftNHK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNHKApp.swift; sourceTree = "<group>"; };
 		C6CF63FA26A95E9300418C7B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		C6CF63F726A95E9300418C7B /* SwiftNHK */ = {
 			isa = PBXGroup;
 			children = (
+				C690521126B30EE300FFB97D /* SwiftNHK.entitlements */,
 				C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */,
 				C6CF63FA26A95E9300418C7B /* ContentView.swift */,
 				C6CF640626A95EEF00418C7B /* ProgramData.swift */,
@@ -269,6 +271,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SwiftNHK/SwiftNHK.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -298,6 +301,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SwiftNHK/SwiftNHK.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

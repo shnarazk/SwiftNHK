@@ -8,16 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    var list = [(1, "a"), (2, "b")]
     @State var secretKey: String = ""
     @State var secretId: String = ""
+    var cp: CurrentProgram? {
+        get {
+            load_data(area: "400", service: "g1", apiKey: secretKey)
+        }
+    }
     var body: some View {
         VStack {
-            Text("Hello, \(secretId)!")
-                .padding()
             List {
-                ForEach(list, id: \.1) { target in
-                    Text("--\(target.1)")
+                if let p = cp {
+                    ForEach([p.previous, p.present, p.following]) { p in
+                        HStack {
+                            Text(p.start_time)
+                            VStack {
+                                Text(p.title)
+                                Text(p.subtitle)
+                            }
+                        }
+                    }
+                } else {
+                    Text("fail to load program")
                 }
             }
             NavigationView() {
