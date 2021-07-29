@@ -15,3 +15,5 @@ struct SwiftNHKApp: App {
         }
     }
 }
+
+
