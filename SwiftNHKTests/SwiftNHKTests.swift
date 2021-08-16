@@ -22,6 +22,7 @@ class SwiftNHKTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         XCTAssert(load_data(area: "400", service: "g1", apiKey: apiKey) != nil)
+        XCTAssert(load_data(area: "400", service: "e1", apiKey: apiKey) != nil)
     }
 
     func testPerformanceExample() throws {

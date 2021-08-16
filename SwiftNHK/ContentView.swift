@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State var apiKey: String = ProcessInfo.processInfo.environment["APIKey"] ?? ""
+    @State var channel: String
     @State var cp: CurrentProgram?
     var body: some View {
         VStack {
@@ -37,10 +38,22 @@ struct ContentView: View {
                 }
             }
             .task {
-                cp = load_data(area: "400", service: "g1", apiKey: apiKey)
+                cp = load_data(area: "400", service: channel, apiKey: apiKey)
             }
             .refreshable {
-                cp = load_data(area: "400", service: "g1", apiKey: apiKey)
+                cp = load_data(area: "400", service: channel, apiKey: apiKey)
+            }
+            HStack {
+                Button("総合") {
+                    channel = "g1"
+                    cp = load_data(area: "400", service: channel, apiKey: apiKey)
+                }
+                    .padding()
+                Button("Eテレ") {
+                    channel = "e1"
+                    cp = load_data(area: "400", service: channel, apiKey: apiKey)
+                }
+                    .padding()
             }
             HStack {
                 Text("Key")
@@ -48,7 +61,7 @@ struct ContentView: View {
                 TextField("Key", text: $apiKey)
                     .padding()
                 Button("Refresh") {
-                    cp = load_data(area: "400", service: "g1", apiKey: apiKey)
+                    cp = load_data(area: "400", service: channel, apiKey: apiKey)
                 }
                 .padding()
             }
@@ -67,6 +80,6 @@ struct SecretsPanel: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(channel: "g1")
     }
 }

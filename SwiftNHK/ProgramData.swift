@@ -43,12 +43,20 @@ struct CurrentProgram: Decodable {
     let following: ProgramData
 }
 
-struct NowOnAirOnG1: Decodable {
+struct CurrentProgramOnG1: Decodable {
     let g1: CurrentProgram
 }
 
-struct NowOnAir: Decodable {
-    let nowonair_list: NowOnAirOnG1
+struct CurrentProgramOnE1: Decodable {
+    let e1: CurrentProgram
+}
+
+struct NowOnAirG1: Decodable {
+    let nowonair_list: CurrentProgramOnG1
+}
+
+struct NowOnAirE1: Decodable {
+    let nowonair_list:CurrentProgramOnE1
 }
 
 func load_data (area: String, service: String, apiKey: String) -> CurrentProgram? {
@@ -66,13 +74,26 @@ func load_data (area: String, service: String, apiKey: String) -> CurrentProgram
         return nil
     }
     let decoder = JSONDecoder()
-    let result: NowOnAir
-    do {
-        result = try decoder.decode(NowOnAir.self, from: data)
+    switch service {
+    case "e1":
+        let result: NowOnAirE1
+        do {
+            result = try decoder.decode(NowOnAirE1.self, from: data)
+        }
+        catch {
+            print("fail to parse JSON \(data)")
+            return nil
+        }
+        return result.nowonair_list.e1
+    default:
+        let result: NowOnAirG1
+        do {
+            result = try decoder.decode(NowOnAirG1.self, from: data)
+        }
+        catch {
+            print("fail to parse JSON \(data)")
+            return nil
+        }
+        return result.nowonair_list.g1
     }
-    catch {
-        print("fail to parse JSON \(data)")
-        return nil
-    }
-    return result.nowonair_list.g1
 }
