@@ -43,20 +43,15 @@ struct CurrentProgram: Decodable {
     let following: ProgramData
 }
 
-struct CurrentProgramOnG1: Decodable {
-    let g1: CurrentProgram
+struct CurrentProgramOnAir: Decodable {
+    let g1: CurrentProgram?
+    let g2: CurrentProgram?
+    let e1: CurrentProgram?
+    let e2: CurrentProgram?
 }
 
-struct CurrentProgramOnE1: Decodable {
-    let e1: CurrentProgram
-}
-
-struct NowOnAirG1: Decodable {
-    let nowonair_list: CurrentProgramOnG1
-}
-
-struct NowOnAirE1: Decodable {
-    let nowonair_list:CurrentProgramOnE1
+struct NowOnAir: Decodable {
+    let nowonair_list: CurrentProgramOnAir
 }
 
 func load_data (area: String, service: String, apiKey: String) -> CurrentProgram? {
@@ -74,26 +69,24 @@ func load_data (area: String, service: String, apiKey: String) -> CurrentProgram
         return nil
     }
     let decoder = JSONDecoder()
+    let result: NowOnAir
+    do {
+        result = try decoder.decode(NowOnAir.self, from: data)
+    }
+    catch {
+        print("fail to parse JSON \(data)")
+        return nil
+    }
     switch service {
+    case "g1":
+        return result.nowonair_list.g1
+    case "g2":
+        return result.nowonair_list.e2
     case "e1":
-        let result: NowOnAirE1
-        do {
-            result = try decoder.decode(NowOnAirE1.self, from: data)
-        }
-        catch {
-            print("fail to parse JSON \(data)")
-            return nil
-        }
         return result.nowonair_list.e1
+    case "e2":
+        return result.nowonair_list.e2
     default:
-        let result: NowOnAirG1
-        do {
-            result = try decoder.decode(NowOnAirG1.self, from: data)
-        }
-        catch {
-            print("fail to parse JSON \(data)")
-            return nil
-        }
         return result.nowonair_list.g1
     }
 }
