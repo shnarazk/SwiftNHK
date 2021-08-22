@@ -10,7 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @State var apiKey: String = ProcessInfo.processInfo.environment["APIKey"] ?? ""
     @State var channel: String
-    @State var cp: CurrentProgram?
+    var cp: CurrentProgram? {
+        get {
+            load_data(area: "400", service: channel, apiKey: apiKey)
+        }
+    }
     var body: some View {
         VStack {
             List {
@@ -37,31 +41,24 @@ struct ContentView: View {
                     Text("fail to load program")
                 }
             }
-            .task {
-                cp = load_data(area: "400", service: channel, apiKey: apiKey)
-            }
+
             .refreshable {
-                cp = load_data(area: "400", service: channel, apiKey: apiKey)
+                channel = "g1"
             }
-            HStack {
-                Button("総合") {
-                    channel = "g1"
-                    cp = load_data(area: "400", service: channel, apiKey: apiKey)
-                }
-                    .padding()
-                Button("Eテレ") {
-                    channel = "e1"
-                    cp = load_data(area: "400", service: channel, apiKey: apiKey)
-                }
-                    .padding()
-            }
+            Picker(selection: $channel, label: EmptyView(), content: {
+                Text("総合").tag("g1")
+                Text("Eテレ").tag("e1")
+                Text("Eテレサブチャンネル").tag("e2")
+            })
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.horizontal, 10)
             HStack {
                 Text("Key")
                     .padding()
                 TextField("Key", text: $apiKey)
                     .padding()
                 Button("Refresh") {
-                    cp = load_data(area: "400", service: channel, apiKey: apiKey)
+                    channel = "g1"
                 }
                 .padding()
             }

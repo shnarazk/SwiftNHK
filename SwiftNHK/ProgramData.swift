@@ -29,6 +29,11 @@ struct ProgramData: Decodable, Identifiable {
     let id: String
     let event_id: String
     let start_time: String
+    var time: Date? {
+        get {
+            parseDate(start_time)
+        }
+    }
     let end_time: String
     let area: ProgramArea
     let service: ProgramService
@@ -88,5 +93,16 @@ func load_data (area: String, service: String, apiKey: String) -> CurrentProgram
         return result.nowonair_list.e2
     default:
         return result.nowonair_list.g1
+    }
+}
+
+func parseDate(_ str: String) -> Date? {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.dateFormat = "yyyy-MM-d"
+    if let date = formatter.date(from: str) {
+        return date
+    } else {
+        return nil
     }
 }
