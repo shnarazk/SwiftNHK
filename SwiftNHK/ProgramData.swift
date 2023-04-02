@@ -53,6 +53,9 @@ struct CurrentProgramOnAir: Decodable {
     let g2: CurrentProgram?
     let e1: CurrentProgram?
     let e2: CurrentProgram?
+    let r1: CurrentProgram?
+    let r2: CurrentProgram?
+    let r3: CurrentProgram?
 }
 
 struct NowOnAir: Decodable {
@@ -91,6 +94,12 @@ func load_data (area: String, service: String, apiKey: String) -> CurrentProgram
         return result.nowonair_list.e1
     case "e2":
         return result.nowonair_list.e2
+    case "r1":
+        return result.nowonair_list.r1
+    case "r2":
+        return result.nowonair_list.r2
+    case "r3":
+        return result.nowonair_list.r3
     default:
         return result.nowonair_list.g1
     }
