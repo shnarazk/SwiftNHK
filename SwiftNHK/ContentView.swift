@@ -12,6 +12,7 @@ struct ContentView: View {
     @State var area: String = "400"
     @State var tv_programs: CurrentProgramOnAir = CurrentProgramOnAir()
     @State var nr_programs: CurrentProgramOnAir = CurrentProgramOnAir()
+    @State var refreshCount: Int = 0
     @State var mediaType = 1
     var body: some View {
         VStack {
@@ -69,11 +70,17 @@ struct ContentView: View {
                     .padding()
                 }
             case 4:
-                Spacer()
-                HStack {
-                    Text("")
+                VStack {
+                    Spacer()
+                    Text("https://api.nhk.or.jp/v2/pg/now/\(area)/tv.json?key=\(apiKey)")
+                    HStack {
+                        Spacer()
+                        Text("Refresh: \(refreshCount)")
+                            .padding()
+                        Spacer()
+                    }
+                    Spacer()
                 }
-                Spacer()
             default: Text("Default")
             }
             Spacer()
@@ -91,6 +98,7 @@ struct ContentView: View {
             .padding(.horizontal, 10)
         }
         .task {
+            refreshCount += 1
             tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
             nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
         }

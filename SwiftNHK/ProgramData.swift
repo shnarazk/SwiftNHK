@@ -93,6 +93,7 @@ struct RateLimitError: Decodable {
 
 @concurrent
 func load_data (area: Int, service: String, apiKey: String) async -> CurrentProgramOnAir {
+    /// https://api-portal.nhk.or.jp/doc-now-v2-con
     let url = "https://api.nhk.or.jp/v2/pg/now/\(area)/\(service).json?key=\(apiKey)"
     guard let source: URL = URL(string: url) else {
         print("Invalid URL: \(url)")

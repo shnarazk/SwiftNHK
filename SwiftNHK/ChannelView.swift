@@ -17,7 +17,9 @@ struct ChannelView: View {
                         HStack {
                             AsyncImage(url: URL(string: "https:" + p.service.logo_s.url)) { image in
                                 image.resizable()
-                                    .frame(width: 40, height: 40)
+                                    .frame(
+                                        width: CGFloat(Int(p.service.logo_s.width) ?? 50),
+                                        height: CGFloat(Int(p.service.logo_s.height) ?? 25))
                                     .clipped()
                             } placeholder: {
                                 ProgressView()
