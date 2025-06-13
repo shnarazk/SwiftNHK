@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C660C53D26B924DA00B669F9 /* SwiftNHKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C660C53C26B924DA00B669F9 /* SwiftNHKTests.swift */; };
+		C69E82C32DFB7FB800A7359C /* ChannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69E82C22DFB7FB800A7359C /* ChannelView.swift */; };
 		C6CF63F926A95E9300418C7B /* SwiftNHKApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */; };
 		C6CF63FB26A95E9300418C7B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CF63FA26A95E9300418C7B /* ContentView.swift */; };
 		C6CF63FD26A95E9400418C7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6CF63FC26A95E9400418C7B /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 		C660C53A26B924DA00B669F9 /* SwiftNHKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftNHKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C660C53C26B924DA00B669F9 /* SwiftNHKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNHKTests.swift; sourceTree = "<group>"; };
 		C690521126B30EE300FFB97D /* SwiftNHK.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftNHK.entitlements; sourceTree = "<group>"; };
+		C69E82C22DFB7FB800A7359C /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		C6CF63F526A95E9300418C7B /* SwiftNHK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftNHK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNHKApp.swift; sourceTree = "<group>"; };
 		C6CF63FA26A95E9300418C7B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				C690521126B30EE300FFB97D /* SwiftNHK.entitlements */,
 				C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */,
 				C6CF63FA26A95E9300418C7B /* ContentView.swift */,
+				C69E82C22DFB7FB800A7359C /* ChannelView.swift */,
 				C6CF640626A95EEF00418C7B /* ProgramData.swift */,
 				C6CF63FC26A95E9400418C7B /* Assets.xcassets */,
 				C6CF63FE26A95E9400418C7B /* Preview Content */,
@@ -211,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6CF640726A95EEF00418C7B /* ProgramData.swift in Sources */,
+				C69E82C32DFB7FB800A7359C /* ChannelView.swift in Sources */,
 				C6CF63FB26A95E9300418C7B /* ContentView.swift in Sources */,
 				C6CF63F926A95E9300418C7B /* SwiftNHKApp.swift in Sources */,
 			);

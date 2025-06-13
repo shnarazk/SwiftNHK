@@ -43,66 +43,88 @@ struct ProgramData: Decodable, Identifiable {
 }
 
 struct CurrentProgram: Decodable {
-    let previous: ProgramData
-    let present: ProgramData
-    let following: ProgramData
+    let previous: ProgramData?
+    let present: ProgramData?
+    let following: ProgramData?
+    let error: String?
+    func asList() -> [ProgramData] {
+         [previous, present, following].filter { $0 != nil }.map { $0! }
+    }
 }
 
 struct CurrentProgramOnAir: Decodable {
-    let g1: CurrentProgram?
-    let g2: CurrentProgram?
-    let e1: CurrentProgram?
-    let e2: CurrentProgram?
-    let r1: CurrentProgram?
-    let r2: CurrentProgram?
-    let r3: CurrentProgram?
+    var g1: CurrentProgram? = nil
+    var g2: CurrentProgram? = nil
+    var e1: CurrentProgram? = nil
+    var e2: CurrentProgram? = nil
+    var r1: CurrentProgram? = nil
+    var r2: CurrentProgram? = nil
+    var r3: CurrentProgram? = nil
+    var n1: CurrentProgram? = nil
+    var n2: CurrentProgram? = nil
+    var n3: CurrentProgram? = nil
+    var error: String? = nil
 }
 
 struct NowOnAir: Decodable {
     let nowonair_list: CurrentProgramOnAir
 }
 
-func load_data (area: String, service: String, apiKey: String) -> CurrentProgram? {
+
+/// type for rate limit error
+/// {
+///    "fault": {
+///        "faultstring":" Rate limit quota violation. Quota limit  exceeded. Identifier : ...",
+///        "detail": {
+///            "errorcode":"policies.ratelimit.QuotaViolation"
+///        }
+///    }
+///}
+struct RateLimitErrorErrorCode: Decodable {
+    let errorcode: String
+}
+struct RateLimitErrorDetail: Decodable {
+    let faultstring: String
+    let detail: RateLimitErrorErrorCode
+}
+struct RateLimitError: Decodable {
+    let fault: RateLimitErrorDetail
+}
+
+@concurrent
+func load_data (area: Int, service: String, apiKey: String) async -> CurrentProgramOnAir {
     let url = "https://api.nhk.or.jp/v2/pg/now/\(area)/\(service).json?key=\(apiKey)"
     guard let source: URL = URL(string: url) else {
         print("Invalid URL: \(url)")
-        return nil
+        return CurrentProgramOnAir(error: "Invalid URL: \(url)")
     }
+//    guard let data = try? Data(contentsOf: source) else {
+//        print("Can't load from \(url)")
+//        return CurrentProgramOnAir(error: "Can't load from \(url)")
+//    }
     do {
-        let x = try Data(contentsOf: source)
-        print(x)
-    } catch let error { print(error)}
-    guard let data = try? Data(contentsOf: source) else {
-        print("can't load from \(url)")
-        return nil
+        let (data, _) = try await URLSession.shared.data(from: source)
+        let decoder = JSONDecoder()
+        let result: NowOnAir
+        do {
+            // print(String(data: data, encoding: .utf8))
+            result = try decoder.decode(NowOnAir.self, from: data)
+            return result.nowonair_list
+        }
+        catch {
+            do {
+                let _ = try decoder.decode(RateLimitError.self, from: data)
+                return CurrentProgramOnAir(error: "Rate limit exceeded")
+            }
+            catch {
+                return CurrentProgramOnAir(error: "Fail to parse data: \(String(describing: String(data: data, encoding: .utf8))): \(error)")
+            }
+        }
+
+    } catch {
+        return CurrentProgramOnAir(error: "Error in URL session \(error)")
     }
-    let decoder = JSONDecoder()
-    let result: NowOnAir
-    do {
-        result = try decoder.decode(NowOnAir.self, from: data)
-    }
-    catch {
-        print("fail to parse JSON \(data)")
-        return nil
-    }
-    switch service {
-    case "g1":
-        return result.nowonair_list.g1
-    case "g2":
-        return result.nowonair_list.e2
-    case "e1":
-        return result.nowonair_list.e1
-    case "e2":
-        return result.nowonair_list.e2
-    case "r1":
-        return result.nowonair_list.r1
-    case "r2":
-        return result.nowonair_list.r2
-    case "r3":
-        return result.nowonair_list.r3
-    default:
-        return result.nowonair_list.g1
-    }
+
 }
 
 func parseDate(_ str: String) -> Date? {

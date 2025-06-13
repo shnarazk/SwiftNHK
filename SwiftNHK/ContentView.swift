@@ -9,128 +9,93 @@ import SwiftUI
 
 struct ContentView: View {
     @State var apiKey: String = ProcessInfo.processInfo.environment["APIKey"] ?? ""
-    @State var channel: String
-    var cp: CurrentProgram? {
-        load_data(area: "400", service: channel, apiKey: apiKey)
-    }
+    @State var area: String = "400"
+    @State var tv_programs: CurrentProgramOnAir = CurrentProgramOnAir()
+    @State var nr_programs: CurrentProgramOnAir = CurrentProgramOnAir()
+    @State var mediaType = 1
     var body: some View {
-        NavigationSplitView {
-            List {
-                Button(action: { channel = "g1" }) {
-                    HStack {
-                        Text("総合")
-                        if channel == "g1" {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                        }
+        VStack {
+            switch mediaType {
+            case 1:
+                if let error = tv_programs.error {
+                    Spacer()
+                    Text(error)
+                } else {
+                    List {
+                        ChannelView(cp: tv_programs.g1)
+                        ChannelView(cp: tv_programs.e1)
                     }
-                }
-                Button(action: { channel = "e1" }) {
-                    HStack {
-                        Text("Eテレ")
-                        if channel == "e1" {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                        }
+                    .refreshable {
+                        mediaType = 1
                     }
+                    Spacer()
                 }
-                Button(action: { channel = "e2" }) {
-                    HStack {
-                        Text("Eテレサブチャンネル")
-                        if channel == "e2" {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                        }
+            case 2:
+                if let error = nr_programs.error {
+                    Spacer()
+                    Text(error)
+                } else {
+                    List {
+                        ChannelView(cp: nr_programs.n1)
+                        ChannelView(cp: nr_programs.n2)
+                        ChannelView(cp: nr_programs.n3)
                     }
-                }
-                Button(action: { channel = "r1" }) {
-                    HStack {
-                        Text("NHK radio1")
-                        if channel == "r1" {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                        }
+                    .refreshable {
+                        mediaType = 2
                     }
+                    Spacer()
                 }
-                Button(action: { channel = "r2" }) {
+            case 3:
+                VStack {
                     HStack {
-                        Text("NHK radio2")
-                        if channel == "r2" {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                        }
+                        Spacer()
+                        Text("Key")
+                            .padding()
+                        TextField("Key", text: $apiKey)
+                            .padding()
+                        Spacer()
                     }
-                }
-                Button(action: { channel = "r3" }) {
                     HStack {
-                        Text("NHK FM")
-                        if channel == "r3" {
-                            Spacer()
-                            Image(systemName: "checkmark")
-                        }
+                        Spacer()
+                        Text("Area")
+                            .padding()
+                        TextField("Area code", text: $area)
+                            .padding()
+                        Spacer()
                     }
+                    Button("Refresh") {
+                        mediaType = 1
+                    }
+                    .padding()
                 }
+            case 4:
+                Spacer()
+                HStack {
+                    Text("")
+                }
+                Spacer()
+            default: Text("Default")
             }
-        } detail: {
-            VStack {
-                List {
-                    if let p = cp {
-                        ForEach([p.previous, p.present, p.following]) { p in
-                            VStack(alignment: .leading) {
-                                //                                AsyncImage(url: URL(string: "https:" + p.service.logo_s.url)) { image in image.resizable()
-                                //                                        .frame(width: 40, height: 40)
-                                //                                        .clipped()
-                                //                                } placeholder: {
-                                //                                    ProgressView()
-                                //                                }
-                                // .frame(width: 64, height: 64)
-                                // .clipped()
-                                Text(p.title)
-                                    .font(.title)
-                                    // .font(.headline)
-                                    // .font(.largeTitle)
-
-                                Text(p.start_time)
-                                    .padding(.leading)
-                                Text(p.subtitle)
-                                    // .font(.headline)
-                                    .padding()
-
-                            }
-                        }
-                    } else {
-                        Text("fail to load program")
-                    }
+            Spacer()
+            Picker(
+                selection: $mediaType,
+                label: EmptyView(),
+                content: {
+                    Text("TV").tag(1)
+                    Text("NetRadio").tag(2)
+                    Text("secret").tag(3)
+                    Text("DEBUG").tag(4)
                 }
-
-                .refreshable {
-                    channel = "g1"
-                }
-                //                Picker(selection: $channel, label: EmptyView(), content: {
-                //                    Text("総合").tag("g1")
-                //                    Text("Eテレ").tag("e1")
-                //                    Text("Eテレサブチャンネル").tag("e2")
-                //                    Text("NHK radio1").tag("r1")
-                //                    Text("NHK radio2").tag("r2")
-                //                    Text("NHK FM").tag("r3")
-                //                })
-                //                .pickerStyle(SegmentedPickerStyle())
-                //                .padding(.horizontal, 10)
-
-                //                HStack {
-                //                    Text("Key")
-                //                        .padding()
-                //                    TextField("Key", text: $apiKey)
-                //                        .padding()
-                //                    Button("Refresh") {
-                //                        channel = "g1"
-                //                    }
-                //                    .padding()
-                //                }
-            }
+            )
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 10)
         }
-        // .backgroundExtensionEffect()
+        .task {
+            tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
+            nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
+        }
     }
+    // .backgroundExtensionEffect()
 }
 
 struct SecretsPanel: View {
@@ -142,8 +107,6 @@ struct SecretsPanel: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView(channel: "g1")
-    }
+#Preview {
+    ContentView()
 }
