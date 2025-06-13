@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var debugMode: Bool
     @State var apiKey: String = ProcessInfo.processInfo.environment["APIKey"] ?? ""
     @State var area: String = "400"
     @State var tv_programs: CurrentProgramOnAir = CurrentProgramOnAir()
@@ -83,24 +84,39 @@ struct ContentView: View {
                 }
             default: Text("Default")
             }
-            Spacer()
-            Picker(
-                selection: $mediaType,
-                label: EmptyView(),
-                content: {
-                    Text("TV").tag(1)
-                    Text("NetRadio").tag(2)
-                    Text("secret").tag(3)
-                    Text("DEBUG").tag(4)
-                }
-            )
-            .pickerStyle(.segmented)
-            .padding(.horizontal, 10)
         }
         .task {
             refreshCount += 1
-            tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
-            nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
+            if !debugMode {
+                tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
+                nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
+            }
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: { mediaType = 1 }) { Image(systemName: "tv")
+                }
+                Button(action: { mediaType = 2 }) { Image(systemName: "radio")
+                }
+            }
+            ToolbarSpacer(.flexible, placement: .primaryAction)
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: { mediaType = 3 }) { Image(systemName: "gear")
+                }
+            }
+            ToolbarSpacer(.flexible, placement: .primaryAction)
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: {
+                    Task {
+                        refreshCount += 1
+                        if !debugMode {
+                            tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
+                            nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
+                        }
+                    }
+                })
+                { Image(systemName: "arrow.clockwise") }
+            }
         }
     }
     // .backgroundExtensionEffect()
@@ -116,5 +132,5 @@ struct SecretsPanel: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(debugMode: true)
 }

@@ -47,7 +47,7 @@ struct CurrentProgram: Decodable {
     let present: ProgramData?
     let following: ProgramData?
     let error: String?
-    func asList() -> [ProgramData] {
+    func asProgramList() -> [ProgramData] {
          [previous, present, following].filter { $0 != nil }.map { $0! }
     }
 }
