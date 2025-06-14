@@ -30,16 +30,14 @@ struct ProgramData: Decodable, Identifiable {
     let event_id: String
     let start_time: String
     var time: Date? {
-        get {
-            parseDate(start_time)
-        }
+        parseDate(start_time)
     }
     let end_time: String
     let area: ProgramArea
     let service: ProgramService
     let title: String
     let subtitle: String
-    let genres: Array<String>
+    let genres: [String]
 }
 
 struct CurrentProgram: Decodable {
@@ -48,7 +46,7 @@ struct CurrentProgram: Decodable {
     let following: ProgramData?
     let error: String?
     func asProgramList() -> [ProgramData] {
-         [previous, present, following].filter { $0 != nil }.map { $0! }
+        [previous, present, following].filter { $0 != nil }.map { $0! }
     }
 }
 
@@ -69,7 +67,6 @@ struct CurrentProgramOnAir: Decodable {
 struct NowOnAir: Decodable {
     let nowonair_list: CurrentProgramOnAir
 }
-
 
 /// type for rate limit error
 /// {
@@ -92,17 +89,17 @@ struct RateLimitError: Decodable {
 }
 
 @concurrent
-func load_data (area: Int, service: String, apiKey: String) async -> CurrentProgramOnAir {
+func load_data(config: Config, service: String) async -> CurrentProgramOnAir {
     /// https://api-portal.nhk.or.jp/doc-now-v2-con
-    let url = "https://api.nhk.or.jp/v2/pg/now/\(area)/\(service).json?key=\(apiKey)"
+    let url = "https://api.nhk.or.jp/v2/pg/now/\(config.area)/\(service).json?key=\(config.apiKey)"
     guard let source: URL = URL(string: url) else {
         print("Invalid URL: \(url)")
         return CurrentProgramOnAir(error: "Invalid URL: \(url)")
     }
-//    guard let data = try? Data(contentsOf: source) else {
-//        print("Can't load from \(url)")
-//        return CurrentProgramOnAir(error: "Can't load from \(url)")
-//    }
+    //    guard let data = try? Data(contentsOf: source) else {
+    //        print("Can't load from \(url)")
+    //        return CurrentProgramOnAir(error: "Can't load from \(url)")
+    //    }
     do {
         let (data, _) = try await URLSession.shared.data(from: source)
         let decoder = JSONDecoder()
@@ -111,14 +108,15 @@ func load_data (area: Int, service: String, apiKey: String) async -> CurrentProg
             // print(String(data: data, encoding: .utf8))
             result = try decoder.decode(NowOnAir.self, from: data)
             return result.nowonair_list
-        }
-        catch {
+        } catch {
             do {
                 let _ = try decoder.decode(RateLimitError.self, from: data)
                 return CurrentProgramOnAir(error: "Rate limit exceeded")
-            }
-            catch {
-                return CurrentProgramOnAir(error: "Fail to parse data: \(String(describing: String(data: data, encoding: .utf8))): \(error)")
+            } catch {
+                return CurrentProgramOnAir(
+                    error:
+                        "Fail to parse data: \(String(describing: String(data: data, encoding: .utf8))): \(error)"
+                )
             }
         }
 

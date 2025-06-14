@@ -1,20 +1,36 @@
+import SwiftData
 //
 //  ContentView.swift
 //  SwiftNHK
 //
-//  Created by 楢崎修二 on 2021/07/22.
-//
-
 import SwiftUI
 
 struct ContentView: View {
     @State var debugMode: Bool
-    @State var apiKey: String = ProcessInfo.processInfo.environment["APIKey"] ?? ""
-    @State var area: String = "400"
+    @Environment(\.modelContext) private var context
+    @Query var configs: [SwiftNHKConfig]  // = ProcessInfo.processInfo.environment["APIKey"] ?? ""
     @State var tv_programs: CurrentProgramOnAir = CurrentProgramOnAir()
     @State var nr_programs: CurrentProgramOnAir = CurrentProgramOnAir()
     @State var refreshCount: Int = 0
     @State var mediaType = 1
+    @State private var editorText1: String = ""
+    @State private var editorText2: String = ""
+    var config: Config? {
+        if let conf = configs.first {
+            return Config(config: conf)
+        } else {
+            return nil
+        }
+    }
+    public func saveConfig(apiKey: String, area: String) {
+        if let config = configs.first {
+            config.apiKey = apiKey
+            config.area = area
+        } else {
+            let conf = SwiftNHKConfig(apiKey: apiKey, area: area)
+            context.insert(conf)
+        }
+    }
     var body: some View {
         VStack {
             switch mediaType {
@@ -53,7 +69,12 @@ struct ContentView: View {
                         Spacer()
                         Text("Key")
                             .padding()
-                        TextField("Key", text: $apiKey)
+                        TextField("Key", text: $editorText1)
+                            .onAppear {
+                                if let config {
+                                    editorText1 = config.apiKey
+                                }
+                            }
                             .padding()
                         Spacer()
                     }
@@ -61,19 +82,31 @@ struct ContentView: View {
                         Spacer()
                         Text("Area")
                             .padding()
-                        TextField("Area code", text: $area)
+                        TextField("Area code", text: $editorText2)
+                            .onAppear {
+                                if let config {
+                                    editorText2 = config.area
+                                }
+                            }
                             .padding()
                         Spacer()
                     }
-                    Button("Refresh") {
-                        mediaType = 1
+                    Button("Save") {
+                        saveConfig(apiKey: editorText1, area: editorText2)
+                        // mediaType = 1
                     }
                     .padding()
                 }
             case 4:
                 VStack {
                     Spacer()
-                    Text("https://api.nhk.or.jp/v2/pg/now/\(area)/tv.json?key=\(apiKey)")
+                    if let config {
+                        Text(
+                            "https://api.nhk.or.jp/v2/pg/now/\(config.area)/tv.json?key=\(config.apiKey)"
+                        )
+                    } else {
+                        Text("No saved configration")
+                    }
                     HStack {
                         Spacer()
                         Text("Refresh: \(refreshCount)")
@@ -87,35 +120,31 @@ struct ContentView: View {
         }
         .task {
             refreshCount += 1
-            if !debugMode {
-                tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
-                nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
+            if !debugMode, let config {
+                tv_programs = await load_data(config: config, service: "tv")
+                nr_programs = await load_data(config: config, service: "netradio")
             }
         }
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: { mediaType = 1 }) { Image(systemName: "tv")
-                }
-                Button(action: { mediaType = 2 }) { Image(systemName: "radio")
-                }
+                Button(action: { mediaType = 1 }) { Image(systemName: "tv") }
+                Button(action: { mediaType = 2 }) { Image(systemName: "radio") }
             }
             ToolbarSpacer(.flexible, placement: .primaryAction)
             ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: { mediaType = 3 }) { Image(systemName: "gear")
-                }
+                Button(action: { mediaType = 3 }) { Image(systemName: "gear") }
             }
             ToolbarSpacer(.flexible, placement: .primaryAction)
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: {
                     Task {
                         refreshCount += 1
-                        if !debugMode {
-                            tv_programs = await load_data(area: Int(area) ?? 400, service: "tv", apiKey: apiKey)
-                            nr_programs = await load_data(area: Int(area) ?? 400, service: "netradio", apiKey: apiKey)
+                        if !debugMode, let config {
+                            tv_programs = await load_data(config: config, service: "tv")
+                            nr_programs = await load_data(config: config, service: "netradio")
                         }
                     }
-                })
-                { Image(systemName: "arrow.clockwise") }
+                }) { Image(systemName: "arrow.clockwise") }
             }
         }
     }
@@ -133,4 +162,5 @@ struct SecretsPanel: View {
 
 #Preview {
     ContentView(debugMode: true)
+        .modelContainer(for: SwiftNHKConfig.self)
 }

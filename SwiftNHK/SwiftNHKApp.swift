@@ -12,6 +12,7 @@ struct SwiftNHKApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(debugMode: false)
+                .modelContainer(for: SwiftNHKConfig.self)
         }
     }
 }
