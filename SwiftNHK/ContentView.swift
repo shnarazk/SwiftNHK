@@ -115,7 +115,18 @@ struct ContentView: View {
                     }
                     Spacer()
                 }
-            default: Text("Default")
+            default:
+                    VStack{
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("No configuration or in debug mode")
+                            Button("test") { }
+                                .tint(.green)
+                            Spacer()
+                        }
+                        Spacer()
+                    }
             }
         }
         .task {
@@ -123,6 +134,8 @@ struct ContentView: View {
             if !debugMode, let config {
                 tv_programs = await load_data(config: config, service: "tv")
                 nr_programs = await load_data(config: config, service: "netradio")
+            } else {
+                mediaType = 0
             }
         }
         .toolbar {
@@ -148,7 +161,6 @@ struct ContentView: View {
             }
         }
     }
-    // .backgroundExtensionEffect()
 }
 
 struct SecretsPanel: View {

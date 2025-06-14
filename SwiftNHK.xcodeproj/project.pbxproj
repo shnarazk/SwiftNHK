@@ -13,8 +13,8 @@
 		C6CF63F926A95E9300418C7B /* SwiftNHKApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */; };
 		C6CF63FB26A95E9300418C7B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CF63FA26A95E9300418C7B /* ContentView.swift */; };
 		C6CF63FD26A95E9400418C7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6CF63FC26A95E9400418C7B /* Assets.xcassets */; };
-		C6CF640026A95E9400418C7B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C6CF63FF26A95E9400418C7B /* Preview Assets.xcassets */; };
 		C6CF640726A95EEF00418C7B /* ProgramData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CF640626A95EEF00418C7B /* ProgramData.swift */; };
+		C6E2709A2DFDD26D00EED3E0 /* NHK.icon in Resources */ = {isa = PBXBuildFile; fileRef = C6E270992DFDD26D00EED3E0 /* NHK.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +37,9 @@
 		C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftNHKApp.swift; sourceTree = "<group>"; };
 		C6CF63FA26A95E9300418C7B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C6CF63FC26A95E9400418C7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C6CF63FF26A95E9400418C7B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C6CF640626A95EEF00418C7B /* ProgramData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramData.swift; sourceTree = "<group>"; };
+		C6E270992DFDD26D00EED3E0 /* NHK.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = NHK.icon; sourceTree = "<group>"; };
+		C6E2709B2DFDD32300EED3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +89,7 @@
 		C6CF63F726A95E9300418C7B /* SwiftNHK */ = {
 			isa = PBXGroup;
 			children = (
+				C6E2709B2DFDD32300EED3E0 /* Info.plist */,
 				C690521126B30EE300FFB97D /* SwiftNHK.entitlements */,
 				C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */,
 				C6CF63FA26A95E9300418C7B /* ContentView.swift */,
@@ -95,17 +97,9 @@
 				C69E82C22DFB7FB800A7359C /* ChannelView.swift */,
 				C6CF640626A95EEF00418C7B /* ProgramData.swift */,
 				C6CF63FC26A95E9400418C7B /* Assets.xcassets */,
-				C6CF63FE26A95E9400418C7B /* Preview Content */,
+				C6E270992DFDD26D00EED3E0 /* NHK.icon */,
 			);
 			path = SwiftNHK;
-			sourceTree = "<group>";
-		};
-		C6CF63FE26A95E9400418C7B /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				C6CF63FF26A95E9400418C7B /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,7 +190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6CF640026A95E9400418C7B /* Preview Assets.xcassets in Resources */,
+				C6E2709A2DFDD26D00EED3E0 /* NHK.icon in Resources */,
 				C6CF63FD26A95E9400418C7B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -409,8 +403,9 @@
 		C6CF640426A95E9400418C7B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = NHK;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = SwiftNHK/SwiftNHK.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -423,6 +418,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwiftNHK/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -441,8 +437,9 @@
 		C6CF640526A95E9400418C7B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = NHK;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = SwiftNHK/SwiftNHK.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -455,6 +452,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SwiftNHK/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
