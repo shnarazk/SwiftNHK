@@ -65,10 +65,14 @@ struct ContentView: View {
                 }
             case 3:
                 VStack {
+                    Spacer()
                     HStack {
                         Spacer()
+                        Image(systemName: "key.radiowaves.forward")
+                            .symbolRenderingMode(.hierarchical)
+                            .padding(.leading)
                         Text("Key")
-                            .padding()
+                            .padding(.trailing)
                         TextField("Key", text: $editorText1)
                             .onAppear {
                                 if let config {
@@ -80,8 +84,18 @@ struct ContentView: View {
                     }
                     HStack {
                         Spacer()
-                        Text("Area")
+                        Image(systemName: "arrow.clockwise")
+                        Text("Refresh count: \(refreshCount)")
                             .padding()
+                        Spacer()
+                    }
+
+                    HStack {
+                        Spacer()
+                        Image(systemName: "globe")
+                            .padding(.leading)
+                        Text("Area")
+                            .padding(.trailing)
                         TextField("Area code", text: $editorText2)
                             .onAppear {
                                 if let config {
@@ -91,11 +105,15 @@ struct ContentView: View {
                             .padding()
                         Spacer()
                     }
-                    Button("Save") {
+                    Button(action: {
                         saveConfig(apiKey: editorText1, area: editorText2)
                         // mediaType = 1
+                    }) {
+                        Label("Save", systemImage: "square.and.arrow.down")
                     }
+                    .tint(.blue)
                     .padding()
+                    Spacer()
                 }
             case 4:
                 VStack {
@@ -116,39 +134,53 @@ struct ContentView: View {
                     Spacer()
                 }
             default:
-                    VStack{
+                VStack {
+                    Spacer()
+                    HStack {
                         Spacer()
-                        HStack {
-                            Spacer()
-                            Text("No configuration or in debug mode")
-                            Button("test") { }
-                                .tint(.green)
-                            Spacer()
-                        }
+                        Text("No configuration or in debug mode")
+                            .font(.title)
                         Spacer()
                     }
+                    Spacer()
+                    Button(
+                        action: {
+                            mediaType = 3
+                        },
+                        label: {
+                            Label("Go to setting panel", systemImage: "gear")
+                        }
+                    )
+                    .tint(.blue)
+                    Spacer()
+                }
             }
         }
-        .task {
-            refreshCount += 1
-            if !debugMode, let config {
-                tv_programs = await load_data(config: config, service: "tv")
-                nr_programs = await load_data(config: config, service: "netradio")
-            } else {
-                mediaType = 0
+        .onAppear {
+            Task {
+                refreshCount += 1
+                if !debugMode, let config {
+                    tv_programs = await load_data(config: config, service: "tv")
+                    nr_programs = await load_data(config: config, service: "netradio")
+                } else {
+                    mediaType = 0
+                }
             }
         }
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: { mediaType = 1 }) { Image(systemName: "tv") }
+                    .keyboardShortcut("1")
                 Button(action: { mediaType = 2 }) { Image(systemName: "radio") }
+                    .keyboardShortcut("2")
+
             }
-            ToolbarSpacer(.flexible, placement: .primaryAction)
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarSpacer(.flexible, placement: .automatic)
+            ToolbarItem(placement: .primaryAction) {
                 Button(action: { mediaType = 3 }) { Image(systemName: "gear") }
             }
-            ToolbarSpacer(.flexible, placement: .primaryAction)
-            ToolbarItemGroup(placement: .primaryAction) {
+            ToolbarSpacer(.flexible, placement: .automatic)
+            ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     Task {
                         refreshCount += 1
@@ -158,6 +190,7 @@ struct ContentView: View {
                         }
                     }
                 }) { Image(systemName: "arrow.clockwise") }
+                .tint(.green)
             }
         }
     }

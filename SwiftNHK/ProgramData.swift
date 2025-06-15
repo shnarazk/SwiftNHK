@@ -32,6 +32,14 @@ struct ProgramData: Decodable, Identifiable {
     var time: Date? {
         parseDate(start_time)
     }
+    var is_aired: Bool {
+        let formatter = ISO8601DateFormatter()
+        if let time = formatter.date(from: end_time) {
+            return time < Date()
+        } else {
+            return false
+        }
+    }
     let end_time: String
     let area: ProgramArea
     let service: ProgramService

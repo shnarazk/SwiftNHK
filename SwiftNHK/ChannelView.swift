@@ -25,14 +25,18 @@ struct ChannelView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             AsyncImage(url: URL(string: "https:\(p.service.logo_s.url)")) { image in
-                                image.resizable()
+                                image//.resizable()
+                                    //.aspectRatio(contentMode: .fit)
                                     .frame(
-                                        width: CGFloat(Int(p.service.logo_s.width) ?? 50),
-                                        height: CGFloat(Int(p.service.logo_s.height) ?? 25))
+                                        width: 56, // CGFloat(Int(p.service.logo_s.width) ?? 50),
+                                        height: 34) // CGFloat(Int(p.service.logo_s.height) ?? 25))
                                     .clipped()
+
+
                             } placeholder: {
                                 ProgressView()
                             }
+
                             // .frame(width: 64, height: 64)
                             // .clipped()
                             VStack(alignment: .leading) {
@@ -44,9 +48,10 @@ struct ChannelView: View {
                             }
                         }
                         Text(p.subtitle)
+                            .padding(.trailing)
                         // .font(.headline)
-                        // .padding()
-                    }
+                    }.padding()
+                        .opacity(p.is_aired ? 0.6 : 1.0)
                 }
             }
         }
