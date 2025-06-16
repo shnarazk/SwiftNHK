@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -41,6 +41,10 @@
 		C6E270992DFDD26D00EED3E0 /* NHK.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = NHK.icon; sourceTree = "<group>"; };
 		C6E2709B2DFDD32300EED3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C6F6097B2DFFBBAE0085B0D6 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C660C53726B924DA00B669F9 /* Frameworks */ = {
@@ -89,6 +93,7 @@
 		C6CF63F726A95E9300418C7B /* SwiftNHK */ = {
 			isa = PBXGroup;
 			children = (
+				C6F6097B2DFFBBAE0085B0D6 /* Resources */,
 				C6E2709B2DFDD32300EED3E0 /* Info.plist */,
 				C690521126B30EE300FFB97D /* SwiftNHK.entitlements */,
 				C6CF63F826A95E9300418C7B /* SwiftNHKApp.swift */,
@@ -135,6 +140,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				C6F6097B2DFFBBAE0085B0D6 /* Resources */,
+			);
 			name = SwiftNHK;
 			productName = SwiftNHK;
 			productReference = C6CF63F526A95E9300418C7B /* SwiftNHK.app */;
@@ -166,6 +174,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = C6CF63EC26A95E9300418C7B;
 			productRefGroup = C6CF63F626A95E9300418C7B /* Products */;
@@ -336,6 +345,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
 			};
@@ -395,6 +405,7 @@
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
 			};

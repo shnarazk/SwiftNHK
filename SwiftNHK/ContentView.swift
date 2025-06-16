@@ -71,9 +71,9 @@ struct ContentView: View {
                         Image(systemName: "key.radiowaves.forward")
                             .symbolRenderingMode(.hierarchical)
                             .padding(.leading)
-                        Text("Key")
+                        Text("API Key")
                             .padding(.trailing)
-                        TextField("Key", text: $editorText1)
+                        TextField("API Key", text: $editorText1)
                             .onAppear {
                                 if let config {
                                     editorText1 = config.apiKey
@@ -127,7 +127,7 @@ struct ContentView: View {
                     }
                     HStack {
                         Spacer()
-                        Text("Refresh: \(refreshCount)")
+                        Text("Refresh count: \(refreshCount)")
                             .padding()
                         Spacer()
                     }
